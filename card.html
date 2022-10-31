@@ -102,7 +102,7 @@
     const urls = [];
     images.forEach((image, index) => {
       const num = `${baseNum + index}`.padStart(2, '0');
-      const url = `${dir}/${num}.png`;
+      const url = `${dir}/${num}.png?t=${Date.now()}`;
       image.src = url;
       urls.push(url);
     });
