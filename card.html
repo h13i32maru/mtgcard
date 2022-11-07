@@ -22,6 +22,7 @@
     }
 
     .cards .card {
+      position: relative;
       width: 63mm; /* MTGのカードサイズ */
       height: 88mm;
       background: #eee;
@@ -32,19 +33,18 @@
       height: 100%;
     }
 
-    .url-box {
-      flex: 1;
+    .cards .card input {
+      position: absolute;
+      display: none;
+      bottom: 0;
+      left: 0;
+      width: 80%;
     }
-    .url-box textarea {
-      width: 100%;
-      height: 3em;
-      box-sizing: border-box;
-      white-space: nowrap;
-      font-size: 0.8em;
+
+    .cards .card:hover input {
+      display: block;
     }
-    #urls {
-      font-size: 0.8em;
-    }
+
   </style>
 
   <style media='print'>
@@ -54,60 +54,83 @@
       align-items: center;
       justify-content: center;
     }
-    .url-box {
+    .desc {
+      display: none;
+    }
+
+    .card input {
       display: none;
     }
   </style>
 </head>
 <body>
 <div class='cards'>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
-  <div class='card'><img alrt='card'/></div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
+  <div class='card'>
+    <img alrt='card'/>
+    <input placeholder="カード画像URLを入力">
+  </div>
 </div>
-<div class='url-box'>
-  <textarea id='url'></textarea>
-  <code id='urls'></code>
-  <div>余白なしで印刷</div>
+<div class='desc' style="padding: 10px">
+  <div><a href="https://www.hareruyamtg.com/ja/">晴れる屋</a>などからカード画像を探してくる</div>
+  <div>※画像が小さいので、僕は<a href="http://waifu2x.udp.jp/index.ja.html">wifu2x</a>などを使って解像度を上げてる</div>
+  <div>カード画像URLを入力する</div>
+  <div>印刷ダイアログを開いて、PDFで保存（A4余白なし）</div>
+  <div>適当なネットプリントで印刷して完成</div>
 </div>
 
 <script>
-  const images = document.querySelectorAll('.card img');
-  const textarea = document.querySelector('#url');
-  const urlsEl = document.querySelector('#urls');
+  const cards = document.querySelectorAll('.card');
 
-  // 画像読み込みの成功、失敗処理
-  images.forEach(image => {
+  cards.forEach(card => {
+    const image = card.querySelector('img');
+    const input = card.querySelector('input');
+
+    // 画像読み込みの成功、失敗処理
     image.addEventListener('load', () => {
       image.style.display = 'inline';
     });
     image.addEventListener('error', () => {
       image.style.display = 'none';
     });
-  });
 
-  textarea.addEventListener('blur', () => {
-    const url = textarea.value.trim();
-    if (url.length === 0) return;
-
-    const match = url.match(new RegExp('(^.*)/(\\d+).png$'));
-    const dir = match[1];
-    const baseNum = parseInt(match[2]);
-    const urls = [];
-    images.forEach((image, index) => {
-      const num = `${baseNum + index}`.padStart(2, '0');
-      const url = `${dir}/${num}.png?t=${Date.now()}`;
+    // URL入力処理
+    input.addEventListener('blur', () => {
+      const url = input.value.trim();
+      if (url.length === 0) return;
       image.src = url;
-      urls.push(url);
     });
-
-    urlsEl.textContent = urls.join('\n')
   });
 </script>
 </body>
